@@ -2,6 +2,7 @@ import subprocess
 import requests
 import pandas as pd
 import os
+import shutil
 from dotenv import load_dotenv
 import json
 
@@ -75,19 +76,11 @@ if res:
     with open('scripts/dataset/json/resultado_query.json', 'w', encoding='utf-8') as f:
         json.dump(res, f, ensure_ascii=False, indent=2)
 
-    for repo in res:
-        name = repo['node']['name']
-        url = repo['node']['url'] + '.git'
-        directory = f'./scripts/dataset/{name}'
-        os.makedirs(directory, exist_ok=True)
-        subprocess.run(['git', 'clone', url, directory])
-        break
-
     def run_ck_calculator(repository: str):
         base_path = f'{ROOT_PATH}/scripts'
         ck_jar_path = f'{base_path}/dataset/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar'
         repo_path = f'{base_path}/dataset/{repository}'
-        ck_results = f'{ROOT_PATH}/scripts/dataset/ck/{repository}/'
+        ck_results = f'{ROOT_PATH}/scripts/dataset/{repository}/'
         
         if not os.path.exists(ck_results):
             os.makedirs(ck_results)
@@ -95,7 +88,18 @@ if res:
         ck_command = f'java -jar {ck_jar_path} {repo_path} true 0 false {ck_results}'
         os.system(ck_command)
     
-    run_ck_calculator(name)
+    for repo in res:
+        name = repo['node']['name']
+        url = repo['node']['url'] + '.git'
+        directory = f'./scripts/dataset/{name}'
+        os.makedirs(directory, exist_ok=True)
+        subprocess.run(['git', 'clone', url, directory])
+        run_ck_calculator(name)
+        shutil.rmtree(f'./scripts/dataset/{name}')
+        break
+
+    
+
 
 
     # Converter os dados JSON para DataFrame do Pandas
