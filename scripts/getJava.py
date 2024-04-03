@@ -2,9 +2,14 @@ import subprocess
 import requests
 import pandas as pd
 import os
+import subprocess
 import shutil
 from dotenv import load_dotenv
 import json
+
+caminho = os.getenv("path")
+resultado = os.getenv("resultpath")
+
 
 ROOT_PATH = os.getcwd().split('Lab02_Caracteristicas-de-Qualidade-de-Sistemas-Java')[0].replace('\\', '/')
 load_dotenv()
@@ -77,16 +82,29 @@ if res:
         json.dump(res, f, ensure_ascii=False, indent=2)
 
     def run_ck_calculator(repository: str):
-        base_path = f'{ROOT_PATH}/scripts'
-        ck_jar_path = f'{base_path}/dataset/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar'
-        repo_path = f'{base_path}/dataset/{repository}'
-        ck_results = f'{ROOT_PATH}/scripts/dataset/{repository}/'
+        comando_original = ["java", "-jar", r"C:\Users\tarci\Desktop\new\ck\target\ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar", f"{caminho}/{name}", "true", "0", "true", "resultado"]
+        processo = subprocess.Popen(comando_original, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        saida, erro = processo.communicate()
+        # Exibe a saída
+        if saida:
+            print("Saída:")
+            print(saida.decode())
+        if erro:
+            print("Erro:")
+            print(erro.decode())
+
+
+    
+       # base_path = f'{ROOT_PATH}scripts'
+       # ck_jar_path = f'{base_path}dataset/ck/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar'
+       # repo_path = f'{base_path}/dataset/{repository}'
+       # ck_results = f'{ROOT_PATH}/scripts/dataset/{repository}/'
         
-        if not os.path.exists(ck_results):
-            os.makedirs(ck_results)
+       # if not os.path.exists(ck_results):
+       #     os.makedirs(ck_results)
             
-        ck_command = f'java -jar {ck_jar_path} {repo_path} true 0 false {ck_results}'
-        os.system(ck_command)
+       # ck_command = f'java -jar {ck_jar_path} {repo_path} true 0 false {ck_results}'
+       # os.system(ck_command)
     
     for repo in res:
         name = repo['node']['name']
@@ -95,7 +113,7 @@ if res:
         os.makedirs(directory, exist_ok=True)
         subprocess.run(['git', 'clone', url, directory])
         run_ck_calculator(name)
-        shutil.rmtree(f'./scripts/dataset/{name}')
+       # shutil.rmtree(f'./scripts/dataset/{name}')
         break
 
     
