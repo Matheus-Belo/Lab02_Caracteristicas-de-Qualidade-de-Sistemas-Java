@@ -4,9 +4,8 @@ import os
 import tqdm
 
 chave = os.getenv("key")
-token = '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'
 url = 'https://api.github.com/graphql'
-headers = {'Authorization': 'Bearer %s' % token}
+headers = {'Authorization': 'Bearer %s' % chave}
 
 query = """
 query($cursor: String, $since: GitTimestamp!) {
