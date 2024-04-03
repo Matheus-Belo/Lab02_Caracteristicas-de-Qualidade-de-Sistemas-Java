@@ -7,7 +7,7 @@ from tqdm import tqdm
 from git import Repo
 import getRepo
 
-CSV_FILE_PATH = './scripts/dataset/csv/s2.csv'
+CSV_FILE_PATH = './scripts/dataset/csv/resultado.csv'
 CK_JAR_PATH = "C:/Users/tarci/Desktop/Lab02_Caracteristicas-de-Qualidade-de-Sistemas-Java/scripts/dataset/ck/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar"
 DATASET_PATH = "./scripts/dataset/"
 DOWNLOAD_PATH = "./scripts/"
